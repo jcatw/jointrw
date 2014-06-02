@@ -46,6 +46,9 @@ def estimate_joint_dist(graph, nsteps):
     # normalize
     deg_par /= deg_par.sum()
 
+    import pdb
+    pdb.set_trace()
+
     return deg_par
 
 def plot_marginals(deg_par, graph, title=""):
