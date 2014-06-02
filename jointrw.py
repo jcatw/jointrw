@@ -44,10 +44,7 @@ def estimate_joint_dist(graph, nsteps):
         deg_par[indeg, outdeg] += float(val) / float(n * deg)
 
     # normalize
-    deg_par /= deg_par.sum()
-
-    import pdb
-    pdb.set_trace()
+    #deg_par /= deg_par.sum()
 
     return deg_par
 
