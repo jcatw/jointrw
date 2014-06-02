@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import networkx as nx
+import os, os.path
 import numpy as np
 import random
 import matplotlib.pyplot as plt
@@ -81,6 +82,10 @@ def plot_marginals(deg_par, graph, title=""):
         plt.suptitle("Marginal Distributions")
     else:
         plt.suptitle("Marginal Distributions: %s" % (title),)
+
+    if not os.path.exists('results'):
+        os.makedirs('results')
+    plt.savefig('results/marginal_%s.pdf' % (title,))
 
     return fig
 
