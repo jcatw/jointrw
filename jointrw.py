@@ -65,10 +65,10 @@ def plot_marginals(deg_par, graph, title=""):
         true_indeg[graph.node[node]['in-degree']] += 1. / graph.order()
     plt.subplot(1, 2, 1)
     plt.plot( np.log10(x_indeg+1), np.log10(true_indeg+1), 'k-',
-              np.log10(x_indeg+1), np.log10(est_indeg+1) , 'k--')
+              np.log10(x_indeg+1), np.log10(est_indeg+1) , 'kx--')
     
-    plt.xlabel('in-degree')
-    plt.ylabel('theta')
+    plt.xlabel('log(1 + in-degree)')
+    plt.ylabel('log(1 + theta)')
 
     # marginal out-degree
     x_outdeg = np.arange(max_outdeg + 1)
@@ -78,8 +78,8 @@ def plot_marginals(deg_par, graph, title=""):
         true_outdeg[graph.node[node]['out-degree']] += 1. / graph.order()
     plt.subplot(1, 2, 2)
     plt.plot( np.log10(x_outdeg+1), np.log10(true_outdeg+1), 'k-',
-              np.log10(x_outdeg+1), np.log10(est_outdeg+1) , 'k--')
-    plt.xlabel('out-degree')
+              np.log10(x_outdeg+1), np.log10(est_outdeg+1) , 'kx--')
+    plt.xlabel('log(1 + out-degree)')
 
     if title == "":
         plt.suptitle("Marginal Distributions")
@@ -115,8 +115,7 @@ def main(digraph, nsteps, also_recip=False):
             title = "Flattened"
         plot_marginals(deg_par, graph, title)
 
-    plt.show()
-    
 # test        
 if __name__ == '__main__':
     main(nx.gnp_random_graph(100, 0.3, directed = True), 100, also_recip=True)
+    plt.show()
