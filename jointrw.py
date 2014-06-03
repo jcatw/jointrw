@@ -47,6 +47,8 @@ def estimate_joint_dist(graph, nsteps):
     # normalize
     #deg_par /= deg_par.sum()
 
+    np.savetxt("deg_par.csv", deg_par, delimiter=",")
+
     return deg_par
 
 def plot_marginals(deg_par, graph, title=""):
