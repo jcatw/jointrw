@@ -41,7 +41,8 @@ def estimate_joint_dist(graph, nsteps):
 
     for (indeg, outdeg, deg) in n_iod.keys():
         val = n_iod[(indeg, outdeg, deg)]
-        deg_par[indeg, outdeg] += float(val) / float(n * deg)
+        #deg_par[indeg, outdeg] += float(val) / float(n * deg)
+        deg_par[indeg, outdeg] += float(val) / float(deg)
 
     # normalize
     #deg_par /= deg_par.sum()
