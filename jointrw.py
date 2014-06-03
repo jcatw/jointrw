@@ -41,11 +41,11 @@ def estimate_joint_dist(graph, nsteps):
 
     for (indeg, outdeg, deg) in n_iod.keys():
         val = n_iod[(indeg, outdeg, deg)]
-        #deg_par[indeg, outdeg] += float(val) / float(n * deg)
-        deg_par[indeg, outdeg] += float(val) / float(deg)
+        deg_par[indeg, outdeg] += float(val) / float(n * deg)
+        #deg_par[indeg, outdeg] += float(val) / float(deg)
 
     # normalize
-    #deg_par /= deg_par.sum()
+    deg_par /= deg_par.sum()
 
     np.savetxt("deg_par.csv", deg_par, delimiter=",")
 
@@ -58,27 +58,27 @@ def plot_marginals(deg_par, graph, title=""):
     fig = plt.figure()
 
     # marginal in-degree
-    x_indeg = range(max_indeg+1)
+    x_indeg = np.arange(max_indeg+1)
     est_indeg = deg_par.sum(1)
     true_indeg = np.zeros(max_indeg+1)
     for node in graph.node.keys():
         true_indeg[graph.node[node]['in-degree']] += 1. / graph.order()
     plt.subplot(1, 2, 1)
-    plt.plot( x_indeg, true_indeg, 'k-',
-              x_indeg, est_indeg , 'k--')
+    plt.plot( np.log10(x_indeg+1), np.log10(true_indeg+1), 'k-',
+              np.log10(x_indeg+1), np.log10(est_indeg+1) , 'k--')
     
     plt.xlabel('in-degree')
     plt.ylabel('theta')
 
     # marginal out-degree
-    x_outdeg = range(max_outdeg + 1)
+    x_outdeg = np.arange(max_outdeg + 1)
     est_outdeg = deg_par.sum(0)
     true_outdeg = np.zeros(max_outdeg+1)
     for node in graph.node.keys():
         true_outdeg[graph.node[node]['out-degree']] += 1. / graph.order()
     plt.subplot(1, 2, 2)
-    plt.plot( x_outdeg, true_outdeg, 'k-',
-              x_outdeg, est_outdeg , 'k--')
+    plt.plot( np.log10(x_outdeg+1), np.log10(true_outdeg+1), 'k-',
+              np.log10(x_outdeg+1), np.log10(est_outdeg+1) , 'k--')
     plt.xlabel('out-degree')
 
     if title == "":
