@@ -51,7 +51,14 @@ def estimate_joint_dist(graph, nsteps):
 
     return deg_par
 
-def plot_marginals(deg_par, graph, title=""):
+def pdf_to_ccdf(pdf):
+    ccdf = np.zeros(len(pdf))
+    ccdf[0] = 1.0
+    for i in xrange(1,len(pdf)):
+        ccdf[i] = ccdf[i-1] - pdf[i-1]
+    return ccdf
+
+def plot_marginals(deg_par, graph, title="", plot_path="results/default"):
     max_indeg  = max([graph.node[k]['in-degree'] for k in graph.node.keys()])
     max_outdeg = max([graph.node[k]['out-degree'] for k in graph.node.keys()])
 
@@ -64,11 +71,11 @@ def plot_marginals(deg_par, graph, title=""):
     for node in graph.node.keys():
         true_indeg[graph.node[node]['in-degree']] += 1. / graph.order()
     plt.subplot(1, 2, 1)
-    plt.plot( np.log10(x_indeg+1), np.log10(true_indeg+1), 'k-',
-              np.log10(x_indeg+1), np.log10(est_indeg+1) , 'kx--')
+    plt.plot( np.log10(x_indeg+1), np.log10(pdf_to_ccdf(true_indeg)), 'k-',
+              np.log10(x_indeg+1), np.log10(pdf_to_ccdf(est_indeg)) , 'kx--')
     
     plt.xlabel('log(1 + in-degree)')
-    plt.ylabel('log(1 + theta)')
+    plt.ylabel('log(ccdf)')
 
     # marginal out-degree
     x_outdeg = np.arange(max_outdeg + 1)
@@ -77,8 +84,8 @@ def plot_marginals(deg_par, graph, title=""):
     for node in graph.node.keys():
         true_outdeg[graph.node[node]['out-degree']] += 1. / graph.order()
     plt.subplot(1, 2, 2)
-    plt.plot( np.log10(x_outdeg+1), np.log10(true_outdeg+1), 'k-',
-              np.log10(x_outdeg+1), np.log10(est_outdeg+1) , 'kx--')
+    plt.plot( np.log10(x_outdeg+1), np.log10(pdf_to_ccdf(true_outdeg)), 'k-',
+              np.log10(x_outdeg+1), np.log10(pdf_to_ccdf(est_outdeg)) , 'kx--')
     plt.xlabel('log(1 + out-degree)')
 
     if title == "":
@@ -86,13 +93,14 @@ def plot_marginals(deg_par, graph, title=""):
     else:
         plt.suptitle("Marginal Distributions: %s" % (title),)
 
-    if not os.path.exists('results'):
-        os.makedirs('results')
-    plt.savefig('results/marginal_%s.pdf' % (title,))
+    if not os.path.exists(plot_path):
+        os.makedirs(plot_path)
+    plt.savefig('%s/marginal_%s.pdf' % (plot_path,title.replace(' ','').replace('\n',',')))
 
     return fig
 
-def main(digraph, nsteps, also_recip=False):
+def main(digraph, nsteps, also_recip=False, plot_path='results/default', title=""):
+    orig_title = title
     # construct the directed graph
     label_directed_graph(digraph)
 
@@ -102,6 +110,7 @@ def main(digraph, nsteps, also_recip=False):
         things = [False]
     
     for recip in things:
+        title = orig_title
         graph = digraph.to_undirected(reciprocal = recip)
         label_undirected_graph(graph)
 
@@ -110,10 +119,10 @@ def main(digraph, nsteps, also_recip=False):
         
         # plot the marginals
         if recip:
-            title = "Reciprocated"
+            title = "Reciprocated" + title
         else:
-            title = "Flattened"
-        plot_marginals(deg_par, graph, title)
+            title = "Flattened" + title
+        plot_marginals(deg_par, graph, title, plot_path)
 
 # test        
 if __name__ == '__main__':

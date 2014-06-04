@@ -1,0 +1,3 @@
+[submodule "quicknet"]
+	path = quicknet
+	url = git@github.com:hackscience/quicknet.git
