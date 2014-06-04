@@ -123,6 +123,7 @@ def main(digraph, nsteps, also_recip=False, plot_path='results/default', title="
         else:
             title = "Flattened" + title
         plot_marginals(deg_par, graph, title, plot_path)
+    print "Results directory: %s" % (plot_path,)
 
 # test        
 if __name__ == '__main__':
